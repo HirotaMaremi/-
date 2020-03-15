@@ -33,16 +33,6 @@ class CustomerMst implements CommonEntityBaseInterface, IsValidInterface
     private $id;
 
     /**
-     * 会員コード//WEB会員ID
-     * @var string
-     * @ORM\Column(type="string", length=32)
-     * @Assert\NotBlank(message="会員コードを入力してください。")
-     * @Assert\Length(max=32, maxMessage="会員コードは{{ limit }}文字以内で入力してください。")
-     * @Groups({"customerList", "showIdentifiedCustomer"})
-     */
-    private $memberCode;
-
-    /**
      * 姓
      * @var string
      * @ORM\Column(type="string", length=32)
@@ -209,69 +199,12 @@ class CustomerMst implements CommonEntityBaseInterface, IsValidInterface
     private $fax;
 
     /**
-     * 前回担当営業
-     * @var User
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $lastHandledBy;
-
-    /**
-     * 前回担当部署
-     * @var Department
-     * @ORM\ManyToOne(targetEntity="Department")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $lastHandledDepartment;
-
-    /**
-     * 初回担当営業
-     * @var User
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $firstHandledBy;
-
-    /**
-     * 初回担当部署
-     * @var Department
-     * @ORM\ManyToOne(targetEntity="Department")
-     * @ORM\JoinColumn(nullable=true)
-     */
-    private $firstHandledDepartment;
-
-    /**
-     * 初回見積送信日時
-     * @var \DateTime
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $firstHandledAt;
-
-    /**
      * 登録部署
      * @var Department
      * @ORM\ManyToOne(targetEntity="Department")
      * @ORM\JoinColumn(nullable=false)
      */
     private $createdDepartment;
-
-    /**
-     * 通常ポイント
-     * @var int
-     * @ORM\Column(type="integer")
-     * @Assert\GreaterThanOrEqual(0, message="数量は{{ compared_value }}以上を入力してください。")
-     * @Groups({"findEstimationAjax"})
-     */
-    private $point;
-
-    /**
-     * プレミアムポイント
-     * @var int
-     * @ORM\Column(type="integer")
-     * @Assert\GreaterThanOrEqual(0, message="数量は{{ compared_value }}以上を入力してください。")
-     * @Groups({"findEstimationAjax"})
-     */
-    private $premiumPoint;
 
     /**
      * 連絡方法
@@ -281,27 +214,6 @@ class CustomerMst implements CommonEntityBaseInterface, IsValidInterface
      * @Groups({"findEstimationAjax"})
      */
     private $communicationMethod;
-
-    /**
-     * メールマガジンを配信するか
-     * @var bool
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $isSentMailMagazine = false;
-
-    /**
-     * 締め日
-     * @var string
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $deadLine;
-
-    /**
-     * 支払い日
-     * @var string
-     * @ORM\Column(type="string", nullable=true)
-     */
-    private $paidDate;
 
     /**
      * 紹介者
@@ -358,15 +270,6 @@ class CustomerMst implements CommonEntityBaseInterface, IsValidInterface
     private $hash;
 
     /**
-     * 見積タリフ区分
-     * @var TariffType
-     * @ORM\ManyToOne(targetEntity="TariffType")
-     * @ORM\JoinColumn(nullable=true)
-     * @Groups({"findEstimationAjax"})
-     */
-    private $estimationTariffType;
-
-    /**
      * @var DeliveryAddressMst[]|ArrayCollection
      * @ORM\OneToMany(targetEntity="DeliveryAddressMst", mappedBy="customerMst")
      */
@@ -411,22 +314,6 @@ class CustomerMst implements CommonEntityBaseInterface, IsValidInterface
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    /**
-     * @return null|string
-     */
-    public function getMemberCode(): ?string
-    {
-        return $this->memberCode;
-    }
-
-    /**
-     * @param null|string $memberCode
-     */
-    public function setMemberCode(?string $memberCode): void
-    {
-        $this->memberCode = $memberCode;
     }
 
     /**
@@ -718,86 +605,6 @@ class CustomerMst implements CommonEntityBaseInterface, IsValidInterface
     }
 
     /**
-     * @return User|null
-     */
-    public function getLastHandledBy(): ?User
-    {
-        return $this->lastHandledBy;
-    }
-
-    /**
-     * @param User|null $lastHandledBy
-     */
-    public function setLastHandledBy(?User $lastHandledBy): void
-    {
-        $this->lastHandledBy = $lastHandledBy;
-    }
-
-    /**
-     * @return Department|null
-     */
-    public function getLastHandledDepartment(): ?Department
-    {
-        return $this->lastHandledDepartment;
-    }
-
-    /**
-     * @param Department|null $lastHandledDepartment
-     */
-    public function setLastHandledDepartment(?Department $lastHandledDepartment): void
-    {
-        $this->lastHandledDepartment = $lastHandledDepartment;
-    }
-
-    /**
-     * @return User|null
-     */
-    public function getFirstHandledBy(): ?User
-    {
-        return $this->firstHandledBy;
-    }
-
-    /**
-     * @param User|null $firstHandledBy
-     */
-    public function setFirstHandledBy(?User $firstHandledBy): void
-    {
-        $this->firstHandledBy = $firstHandledBy;
-    }
-
-    /**
-     * @return Department|null
-     */
-    public function getFirstHandledDepartment(): ?Department
-    {
-        return $this->firstHandledDepartment;
-    }
-
-    /**
-     * @param Department|null $firstHandledDepartment
-     */
-    public function setFirstHandledDepartment(?Department $firstHandledDepartment): void
-    {
-        $this->firstHandledDepartment = $firstHandledDepartment;
-    }
-
-    /**
-     * @return \DateTime|null
-     */
-    public function getFirstHandledAt(): ?\DateTime
-    {
-        return $this->firstHandledAt;
-    }
-
-    /**
-     * @param \DateTime|null $firstHandledAt
-     */
-    public function setFirstHandledAt(?\DateTime $firstHandledAt): void
-    {
-        $this->firstHandledAt = $firstHandledAt;
-    }
-
-    /**
      * @return Department|null
      */
     public function getCreatedDepartment(): ?Department
@@ -814,38 +621,6 @@ class CustomerMst implements CommonEntityBaseInterface, IsValidInterface
     }
 
     /**
-     * @return int|null
-     */
-    public function getPoint(): ?int
-    {
-        return $this->point;
-    }
-
-    /**
-     * @param int|null $point
-     */
-    public function setPoint(?int $point): void
-    {
-        $this->point = $point;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getPremiumPoint(): ?int
-    {
-        return $this->premiumPoint;
-    }
-
-    /**
-     * @param int|null $premiumPoint
-     */
-    public function setPremiumPoint(?int $premiumPoint): void
-    {
-        $this->premiumPoint = $premiumPoint;
-    }
-
-    /**
      * @return CommunicationMethod|null
      */
     public function getCommunicationMethod(): ?CommunicationMethod
@@ -859,54 +634,6 @@ class CustomerMst implements CommonEntityBaseInterface, IsValidInterface
     public function setCommunicationMethod(?CommunicationMethod $communicationMethod): void
     {
         $this->communicationMethod = $communicationMethod;
-    }
-
-    /**
-     * @return bool|null
-     */
-    public function isSentMailMagazine(): ?bool
-    {
-        return $this->isSentMailMagazine;
-    }
-
-    /**
-     * @param bool|null $isSentMailMagazine
-     */
-    public function setIsSentMailMagazine(?bool $isSentMailMagazine): void
-    {
-        $this->isSentMailMagazine = $isSentMailMagazine;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getDeadLine(): ?string
-    {
-        return $this->deadLine;
-    }
-
-    /**
-     * @param string|null $deadLine
-     */
-    public function setDeadLine(?string $deadLine): void
-    {
-        $this->deadLine = $deadLine;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getPaidDate(): ?string
-    {
-        return $this->paidDate;
-    }
-
-    /**
-     * @param string|null $paidDate
-     */
-    public function setPaidDate(?string $paidDate): void
-    {
-        $this->paidDate = $paidDate;
     }
 
     /**
@@ -1022,22 +749,6 @@ class CustomerMst implements CommonEntityBaseInterface, IsValidInterface
     }
 
     /**
-     * @return TariffType
-     */
-    public function getEstimationTariffType(): ?TariffType
-    {
-        return $this->estimationTariffType;
-    }
-
-    /**
-     * @param TariffType $estimationTariffType
-     */
-    public function setEstimationTariffType(?TariffType $estimationTariffType): void
-    {
-        $this->estimationTariffType = $estimationTariffType;
-    }
-
-    /**
      * @return DeliveryAddressMst[]|ArrayCollection
      */
     public function getDeliveryAddressMsts()
@@ -1075,24 +786,6 @@ class CustomerMst implements CommonEntityBaseInterface, IsValidInterface
     public function getSenderAddressMsts()
     {
         return $this->senderAddressMsts;
-    }
-
-    /**
-     * 預り金を取得する
-     * @return int
-     */
-    public function getDeposit(): int
-    {
-        $paidAmount = 0;
-        $appliedAmount = 0;
-        foreach ($this->getPayments() as $p) {
-            $paidAmount += $p->getPaidAmount();
-            foreach ($p->getPaymentEstimationRelations() as $rel) {
-                $appliedAmount += $rel->getAppliedAmount();
-            }
-        }
-
-        return $paidAmount - $appliedAmount;
     }
 
     public function __toString(): string
